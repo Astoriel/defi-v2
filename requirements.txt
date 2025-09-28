@@ -1,0 +1,30 @@
+# Core
+requests
+pandas
+psycopg2-binary
+sqlalchemy
+python-dotenv
+tenacity
+pydantic
+beautifulsoup4
+
+# Real APIs
+google-ads
+requests-oauthlib
+posthog
+
+
+# dbt
+dbt-core
+dbt-postgres
+
+# Testing & Linting
+pytest
+pytest-cov
+pytest-mock
+ruff
+
+# Utils
+loguru
+typer
+rich

@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+
+# Node
+node_modules/
+
+# dbt
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+
+# Reports
+reports/build/
+reports/.svelte-kit/
+reports/node_modules/
+
+# Agent Artifacts
+backdate.ps1
+implementation_plan.md
+task.md
+walkthrough.md
