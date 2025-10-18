@@ -1,0 +1,12 @@
+defi_postgres:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      threads: 4
+      host: localhost
+      port: 5434
+      user: postgres
+      password: postgres
+      dbname: defi_v2
+      schema: public
