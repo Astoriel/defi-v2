@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: raw_data
+    schema: raw
+    tables:
+      - name: google_ads
+      - name: twitter_ads
+      - name: posthog_events
+      - name: etherscan_events
+      - name: coingecko_prices
+      - name: competitor_apy
