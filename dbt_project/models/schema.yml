@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: fct_acquisition_roi
+    description: "The Holy Grail of Web3 Marketing: Uniting Web2 ad spend with Web3 on-chain deposit revenue."
+    columns:
+      - name: utm_source
+        tests:
+          - not_null
+      - name: utm_campaign
+        tests:
+          - not_null
+      - name: roas
+        description: "Return on Ad Spend (Total Deposited USD / Total Ad Spend USD)"
+
+  - name: fct_churn_drivers
+    description: "Analyzes churn by connecting wallet withdrawals with top competitor APYs."
+    columns:
+      - name: wallet_address
+        tests:
+          - not_null
+      - name: churn_date
+        tests:
+          - not_null
+      - name: top_competitor_apy
+        description: "The highest prevailing market rate on the day the user withdrew."
