@@ -1,0 +1,68 @@
+name: Web3 Growth Data Pipeline
+
+on:
+  schedule:
+    # Run daily at 01:00 UTC (Early morning for full daily data capture)
+    - cron: '0 1 * * *'
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  extract-and-transform:
+    runs-on: ubuntu-latest
+    
+    # Portfolio Mode: Generate rich mock data instead of requiring 5+ real API Keys.
+    env:
+      DATABASE_URL: 'postgresql://postgres:postgres@localhost:5434/defi_v2'
+      USE_MOCK_DATA: 'true'
+      ENABLE_GOOGLE_ADS: 'true'
+      ENABLE_TWITTER_ADS: 'true'
+      ENABLE_POSTHOG: 'true'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip' # Speeds up CI
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install dbt-core dbt-postgres
+
+      - name: Establish PostgreSQL Database (Docker)
+        # Assuming we are running a temporary CI DB; adjust if pointing to AWS RDS/Snowflake
+        run: |
+          docker-compose up -d postgres
+          sleep 5 # Wait for DB initialization
+          
+      - name: Phase 2 - Run Python Extractors (Real APIs)
+        run: python extract/run_extraction.py
+        
+      - name: Phase 3 - Run dbt Transformations & Data Quality Tests
+        run: cd dbt_project && dbt build --profiles-dir .
+        
+      - name: Phase 4 - Generate dbt Docs for GitHub Pages
+        run: cd dbt_project && dbt docs generate --profiles-dir .
+        
+      - name: Phase 5 - Build Evidence BI Dashboard
+        run: |
+          cd reports
+          npm install
+          npm install @evidence-dev/postgres
+          npm run sources
+          npm run build
+          mkdir -p ../dbt_project/target/dashboard
+          cp -r build/* ../dbt_project/target/dashboard/
+          
+      - name: Deploy Docs & Dashboards to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dbt_project/target
+          publish_branch: gh-pages
+          commit_message: "Deploy final dbt docs and Evidence Dashboard to Github Pages"
