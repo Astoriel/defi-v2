@@ -31,41 +31,9 @@ Alternatively, by setting `USE_MOCK_DATA=true` globally, the pipeline bypasses a
 
 ## 📖 Architecture Overview
 
-```mermaid
-graph TD
-    %% Data Sources
-    subgraph Raw Data Extraction [Python Extractors]
-        G[Google Ads API] -. Optional .-> EXT(Base Extractor)
-        T[Twitter Ads API] -. Optional .-> EXT
-        PH[PostHog API] -. Optional .-> EXT
-        E[Etherscan RPC] --> EXT
-        CG[CoinGecko Price API] --> EXT
-        CA[Web Scraper: Comp. APY] --> EXT
-    end
-
-    %% Database Layer
-    subgraph Data Warehouse [PostgreSQL Server]
-        EXT --> RAW[(Raw Staging Tables)]
-    end
-
-    %% dbt Transforms
-    subgraph dbt Transformations [dbt Core]
-        RAW --> STG(stg_models)
-        STG --> INT(int_models)
-        INT --> FCT1[(fct_acquisition_roi)]
-        INT --> FCT2[(fct_churn_drivers)]
-    end
-
-    %% BI Presentation 
-    subgraph BI Presentation [Evidence.dev]
-        FCT1 --> EB[Evidence BI Engine]
-        FCT2 --> EB
-        EB --> GP[GitHub Pages Static Site]
-    end
-    
-    %% Mock Data Route
-    MD[Mock Data Generator] -. Overrides / Fallback .-> EXT
-```
+<p align="center">
+  <img src="assets/architecture.png" alt="System Architecture Diagram" width="800">
+</p>
 
 The pipeline ingests data from 6 separate sources, transforms it using Kimball dimensional modeling in a PostgreSQL Warehouse, and serves it statically.
 
