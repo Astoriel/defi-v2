@@ -52,7 +52,7 @@ jobs:
       - name: Phase 4 - Generate dbt Docs for Artifacts
         run: cd dbt_project && dbt docs generate --profiles-dir .
         
-      - name: Phase 5 - Build Evidence BI Dashboard
+      - name: Phase 5 - Build Evidence BI Dashboard & Merge Docs
         run: |
           cd reports
           npm install
@@ -60,6 +60,9 @@ jobs:
           npm run sources
           # Build static site using Evidence framework
           npm run build
+          # Merge dbt docs into the final published directory
+          mkdir -p build/docs
+          cp -r ../dbt_project/target/* build/docs/
           
       - name: Deploy Dashboard to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

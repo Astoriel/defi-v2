@@ -35,18 +35,21 @@ def main():
     if os.getenv("ENABLE_GOOGLE_ADS", "true").lower() == "true":
         google.run("google_ads")
     else:
-        logger.info("Google Ads extraction is DISABLED in config.")
+        logger.info("Google Ads extraction is DISABLED in config. Generating mock table to maintain dbt DAG integrity.")
+        google.generate_mock_data("google_ads")
 
     if os.getenv("ENABLE_TWITTER_ADS", "true").lower() == "true":
         twitter.run("twitter_ads")
     else:
-        logger.info("Twitter Ads extraction is DISABLED in config.")
+        logger.info("Twitter Ads extraction is DISABLED in config. Generating mock table to maintain dbt DAG integrity.")
+        twitter.generate_mock_data("twitter_ads")
     
     # 3. Extract & Load The Attribution Linkage
     if os.getenv("ENABLE_POSTHOG", "true").lower() == "true":
         posthog.run("posthog_events")
     else:
-        logger.info("PostHog Analytics extraction is DISABLED in config.")
+        logger.info("PostHog Analytics extraction is DISABLED in config. Generating mock table to maintain dbt DAG integrity.")
+        posthog.generate_mock_data("posthog_events")
     
     # 4. Extract & Load On-Chain and Alternative Data
     etherscan.run("etherscan_events")

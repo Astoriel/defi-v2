@@ -12,22 +12,60 @@
 ## 🚀 View Live Dashboards
 
 The analytics artifacts are automatically built via CI/CD and hosted on GitHub Pages:
-- 📈 **[Evidence BI Dashboard](https://astoriel.github.io/defi-v2/dashboard/)**: Interactive ROAS & Churn visualizations.
-- 🗄️ **[dbt Data Dictionary](https://astoriel.github.io/defi-v2/)**: Full DAG lineage, schema documentation, and Kimball modeling constraints.
+- 📈 **[Evidence BI Dashboard](https://astoriel.github.io/defi-v2/)**: Interactive ROAS & Churn visualizations.
+- 🗄️ **[dbt Data Dictionary](https://astoriel.github.io/defi-v2/docs/)**: Full DAG lineage, schema documentation, and Kimball modeling constraints.
 
 ---
 
-## ⚡ Mock Mode (Zero Setup Required)
+## ⚡ Modular API Toggles & "Mock Mode"
 
-To make it easy to evaluate and test this project without needing 6 different active API keys (Google Ads, Twitter API, Etherscan Pro, Posthog, etc.), this repository includes a built-in **Data Generation Engine**.
+To make it easy to evaluate and test this project without needing 6 different active API keys (Google Ads, Twitter API, Etherscan Pro, Posthog, etc.), this repository uses **Fully Autonomous Extractors**.
 
-By simply setting `USE_MOCK_DATA=true` in your `.env` file, the Python extractors will bypass real API endpoints and generate statistically realistic internal and on-chain events. This allows you to compile the entire dbt warehouse and view the BI dashboards locally in minutes.
+You can toggle **any** individual module via your `.env` file (e.g., `ENABLE_GOOGLE_ADS=false`). The pipeline handles missing configurations elegantly—if a module is disabled, the Python runner will automatically fallback to generating a localized mock dataframe for that specific data source. This guarantees the `dbt` Data Warehouse DAG compiles perfectly every time, even if you run it with only 1 or 2 live APIs.
 
-*Note: This repository is the v2 evolution of my earlier [DeFi-Pipeline-PoC](https://github.com/Astoriel/DeFi-Pipeline-PoC). This version introduces strict Kimball dimensional modeling, dbt testing, and an Evidence.dev BI layer.*
+Alternatively, by setting `USE_MOCK_DATA=true` globally, the pipeline bypasses all live API calls and generates a beautifully synchronized portfolio-ready dataset for local viewing in minutes.
+
+*Note: This repository is the v2 evolution of my earlier [DeFi-Pipeline-PoC](https://github.com/Astoriel/DeFi-Pipeline-PoC). This version introduces strict Kimball dimensional modeling, automated CI/CD testing, and an Evidence.dev BI layer.*
 
 ---
 
 ## 📖 Architecture Overview
+
+```mermaid
+graph TD
+    %% Data Sources
+    subgraph Raw Data Extraction [Python Extractors]
+        G[Google Ads API] -. Optional .-> EXT(Base Extractor)
+        T[Twitter Ads API] -. Optional .-> EXT
+        PH[PostHog API] -. Optional .-> EXT
+        E[Etherscan RPC] --> EXT
+        CG[CoinGecko Price API] --> EXT
+        CA[Web Scraper: Comp. APY] --> EXT
+    end
+
+    %% Database Layer
+    subgraph Data Warehouse [PostgreSQL Server]
+        EXT --> RAW[(Raw Staging Tables)]
+    end
+
+    %% dbt Transforms
+    subgraph dbt Transformations [dbt Core]
+        RAW --> STG(stg_models)
+        STG --> INT(int_models)
+        INT --> FCT1[(fct_acquisition_roi)]
+        INT --> FCT2[(fct_churn_drivers)]
+    end
+
+    %% BI Presentation 
+    subgraph BI Presentation [Evidence.dev]
+        FCT1 --> EB[Evidence BI Engine]
+        FCT2 --> EB
+        EB --> GP[GitHub Pages Static Site]
+    end
+    
+    %% Mock Data Route
+    MD[Mock Data Generator] -. Overrides / Fallback .-> EXT
+```
 
 The pipeline ingests data from 6 separate sources, transforms it using Kimball dimensional modeling in a PostgreSQL Warehouse, and serves it statically.
 
