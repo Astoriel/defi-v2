@@ -40,7 +40,7 @@ jobs:
       - name: Establish PostgreSQL Database (Docker)
         # Assuming we are running a temporary CI DB; adjust if pointing to AWS RDS/Snowflake
         run: |
-          docker-compose up -d postgres
+          docker compose up -d postgres
           sleep 5 # Wait for DB initialization
           
       - name: Phase 2 - Run Python Extractors (Real APIs)
