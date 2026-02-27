@@ -48,7 +48,7 @@ Models are separated into `staging`, `intermediate`, and `marts`. We output two 
 
 ### 3. Business Intelligence (Evidence.dev)
 We use Evidence (BI-as-code) to generate static Markdown-based analytics pages directly from the `marts` schema. 
-*(Visual dashboards available via the [Live Dashboard Link](https://astoriel.github.io/defi-v2/dashboard/))*
+*(Visual dashboards available via the [Live Dashboard Link](https://astoriel.github.io/defi-v2/))*
 
 ---
 
