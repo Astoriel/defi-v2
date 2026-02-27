@@ -49,7 +49,7 @@ jobs:
       - name: Phase 3 - Run dbt Transformations & Data Quality Tests
         run: cd dbt_project && dbt build --profiles-dir .
         
-      - name: Phase 4 - Generate dbt Docs for GitHub Pages
+      - name: Phase 4 - Generate dbt Docs for Artifacts
         run: cd dbt_project && dbt docs generate --profiles-dir .
         
       - name: Phase 5 - Build Evidence BI Dashboard
@@ -58,14 +58,14 @@ jobs:
           npm install
           npm install @evidence-dev/postgres
           npm run sources
+          # We export base path so Evidence knows it's hosted in a GitHub repo subfolder
+          export BASE_PATH="/defi-v2" 
           npm run build
-          mkdir -p ../dbt_project/target/dashboard
-          cp -r build/* ../dbt_project/target/dashboard/
           
-      - name: Deploy Docs & Dashboards to GitHub Pages
+      - name: Deploy Dashboard to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dbt_project/target
+          publish_dir: ./reports/build
           publish_branch: gh-pages
-          commit_message: "Deploy final dbt docs and Evidence Dashboard to Github Pages"
+          commit_message: "Deploy Evidence Dashboard to Github Pages"
