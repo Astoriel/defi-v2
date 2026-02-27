@@ -1,0 +1,41 @@
+
+  
+    
+
+  create  table "defi_v2"."public_intermediate"."int_marketing_spend__dbt_tmp"
+  
+  
+    as
+  
+  (
+    -- models/intermediate/int_marketing_spend.sql
+
+with google as (
+    select
+        metric_date,
+        utm_source,
+        utm_medium,
+        campaign_name,
+        spend_usd,
+        impressions,
+        clicks
+    from "defi_v2"."public_staging"."stg_google_ads"
+),
+
+twitter as (
+    select
+        metric_date,
+        utm_source,
+        utm_medium,
+        campaign_name,
+        spend_usd,
+        impressions,
+        clicks
+    from "defi_v2"."public_staging"."stg_twitter_ads"
+)
+
+select * from google
+union all
+select * from twitter
+  );
+  
