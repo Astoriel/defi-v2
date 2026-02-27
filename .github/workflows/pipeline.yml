@@ -59,8 +59,7 @@ jobs:
           npm install @evidence-dev/postgres
           npm run sources
           # We export base path so Evidence knows it's hosted in a GitHub repo subfolder
-          export BASE_PATH="/defi-v2" 
-          npm run build
+          npm run build -- --base /defi-v2
           
       - name: Deploy Dashboard to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
