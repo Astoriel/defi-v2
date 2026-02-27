@@ -17,11 +17,13 @@ The analytics artifacts are automatically built via CI/CD and hosted on GitHub P
 
 ---
 
-## ⚡ Portfolio "Mock" Mode (Zero Setup Required)
+## ⚡ Mock Mode (Zero Setup Required)
 
-To make it easy for recruiters and developers to evaluate this project without needing 6 different API keys (Google Ads, Twitter API, Etherscan Pro, Posthog, etc.), this repository includes a built-in **Data Generation Engine**.
+To make it easy to evaluate and test this project without needing 6 different active API keys (Google Ads, Twitter API, Etherscan Pro, Posthog, etc.), this repository includes a built-in **Data Generation Engine**.
 
 By simply setting `USE_MOCK_DATA=true` in your `.env` file, the Python extractors will bypass real API endpoints and generate statistically realistic internal and on-chain events. This allows you to compile the entire dbt warehouse and view the BI dashboards locally in minutes.
+
+*Note: This repository is the v2 evolution of my earlier [DeFi-Pipeline-PoC](https://github.com/Astoriel/DeFi-Pipeline-PoC). This version introduces strict Kimball dimensional modeling, dbt testing, and an Evidence.dev BI layer.*
 
 ---
 
@@ -46,10 +48,7 @@ Models are separated into `staging`, `intermediate`, and `marts`. We output two 
 
 ### 3. Business Intelligence (Evidence.dev)
 We use Evidence (BI-as-code) to generate static Markdown-based analytics pages directly from the `marts` schema. 
-
-<p align="center">
-  <img src="assets/evidence_dashboard.png" alt="BI Dashboard Evidence" width="800">
-</p>
+*(Visual dashboards available via the [Live Dashboard Link](https://astoriel.github.io/defi-v2/dashboard/))*
 
 ---
 
