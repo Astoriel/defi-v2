@@ -1,6 +1,9 @@
 name: Web3 Growth Data Pipeline
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     # Run daily at 01:00 UTC (Early morning for full daily data capture)
     - cron: '0 1 * * *'
