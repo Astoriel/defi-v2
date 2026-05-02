@@ -9,6 +9,10 @@
 
 ---
 
+## Project status
+
+Portfolio data engineering demo. Snapshot date: 2025-11-09. Mock mode and generated analytics artifacts are part of the reproducible demo path. See [STATUS.md](STATUS.md) and [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md).
+
 ## 🚀 View Live Dashboards
 
 The analytics artifacts are automatically built via CI/CD and hosted on GitHub Pages:
